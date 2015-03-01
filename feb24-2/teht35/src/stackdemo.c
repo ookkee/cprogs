@@ -13,14 +13,23 @@ int main() {
     printf("Type 'q' to stop giving input.\n");
 
     int num;
+    stack *prev = NULL;
 
     while(1) {
         printf(">> ");
         if(scanf("%d", &num)==0)
             break;
 
-        printf("%d\n", num);
+        //printf("%d\n", num);
+        prev = push(prev, num);
     }
+
+    printf("\n\nYour stack:\n");
+
+    while(prev != NULL) {
+        prev = pop(prev);
+    }
+    //free(prev);
 
     return 0;
 }
