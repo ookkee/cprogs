@@ -1,9 +1,12 @@
 #include<stdio.h>
 #include<signal.h>
 
+void bomb(int);
+void refuel(int);
+void killer(int);
+
 int main() {
     
-    //fuel = 100
     int fuel = 100;
     int counter = 0;
     pid_t pid, ppid;
@@ -11,7 +14,7 @@ int main() {
     ppid = getppid();
     signal(SIGUSR1, bomb);
     signal(SIGUSR2, refuel);
-    signal(SIGKILL, killer);
+    //signal(ppid, killer);
 
     printf("Launched plane %d\n", pid);
 
@@ -23,13 +26,14 @@ int main() {
         //inform about fuel every 3 seconds
         if(counter == 3) {
             counter = 0;
-            printf("Fuel status: %d %d", pid, fuel);
+            printf("Fuel status %d: %d", pid, fuel);
             if(fuel < 30) printf(" BINGO FUEL!");
             printf("\n");
         }
         //if fuel <= 0 send SIGUSR2 to parent (getppid) and die
         if(fuel <= 0) {
-            kill();
+            kill(getppid(), SIGUSR2);
+            break;
         }
     }
 
@@ -37,15 +41,16 @@ int main() {
 }
 
 void bomb(int signal) {
-    printf("Plane nr. %d dropped bombs!\n", pid);
+    printf("Plane %d dropped bombs!\n", getpid());
 }
 
 void refuel(int signal) {
-    fuel = 100;
-    printf("Plane nr. %d refueled!\n", pid);
+    //*fuel = 100;
+    //printf("Plane %d refueled!\n", getpid());
+    printf("Plane %d How do I access my fuel from outside the scope?!\n", getpid());
 }
 
-void killer(int signal) {
-    raise(ppid, SIGUSR2);
-    exit(SIGUSR2);
-}
+//void killer(int signal) {
+//    raise(ppid, SIGUSR2);
+//    exit(SIGUSR2);
+//}
