@@ -25,22 +25,14 @@ int main() {
     while(1) {
         //wait for command
         printf(" > ");
-        fgets(cmd, sizeof(cmd), stdin);
+        //fgets(cmd, sizeof(cmd), stdin);
         //printf("%s\n", cmd);
+        scanf("%s", cmd);
         token = strtok(cmd, delim);
 
+        //"quit" breaks this loop
         if(!strcmp(token, "quit")) {
             break;
-        }
-        //"launch" forks new process (execvp new "codebase")
-        else if (!strcmp(token, "launch")) {
-            cpid[planes] = fork();
-            if(cpid[planes] == 0) {
-                execvp("./plane", args);
-            }
-            else {
-                planes += 1;
-            }
         }
         //"status" lists all planes (i.e. their pid's)
         else if (!strcmp(token, "status")) {
@@ -55,14 +47,22 @@ int main() {
                 kill(atoi(token), SIGUSR1);
             //printf("bomb\n");
         }
-        //
         //"refuel N" sends SIGUSR2 to process N
         else if (!strcmp(token, "refuel")) {
             token = strtok(NULL, delim);
             if(token != NULL)
                 kill(atoi(token), SIGUSR2);
         }
-        //
+        //"launch" forks new process (execvp new "codebase")
+        else if (!strcmp(token, "launch")) {
+            cpid[planes] = fork(); // forking should be earlier/first in this code
+            if(cpid[planes] == 0) {
+                execvp("./plane", args);
+            }
+            else {
+                planes += 1;
+            }
+        }
         //this process receiving SIGUSR2 prints distress message
         else {}
     }
@@ -71,9 +71,9 @@ int main() {
 }
 
 void sos(int signal) {
-    printf("SOS! A plane has crashed\n");
+    printf("\nSOS! A plane has crashed\n");
 }
 
 void oops(int signal) {
-    printf("You went to the toilet!\n");
+    printf("\nYou went to the toilet!\n");
 }

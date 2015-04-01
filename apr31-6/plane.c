@@ -16,7 +16,7 @@ int main() {
     signal(SIGUSR2, refuel);
     //signal(ppid, killer);
 
-    printf("Launched plane %d\n", pid);
+    printf("\nLaunched plane %d\n", pid);
 
     while(1) {
         counter++;
@@ -26,7 +26,7 @@ int main() {
         //inform about fuel every 3 seconds
         if(counter == 3) {
             counter = 0;
-            printf("Fuel status %d: %d", pid, fuel);
+            printf("\nFuel status %d: %d", pid, fuel);
             if(fuel < 30) printf(" BINGO FUEL!");
             printf("\n");
         }
@@ -41,13 +41,13 @@ int main() {
 }
 
 void bomb(int signal) {
-    printf("Plane %d dropped bombs!\n", getpid());
+    printf("\nPlane %d dropped bombs!\n", getpid());
 }
 
 void refuel(int signal) {
     //*fuel = 100;
     //printf("Plane %d refueled!\n", getpid());
-    printf("Plane %d How do I access my fuel from outside the scope?!\n", getpid());
+    printf("\nPlane %d How do I access my fuel from outside the scope?!\n", getpid());
 }
 
 //void killer(int signal) {
